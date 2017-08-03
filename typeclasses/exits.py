@@ -33,4 +33,32 @@ class Exit(DefaultExit):
                                         not be called if the attribute `err_traverse` is
                                         defined, in which case that will simply be echoed.
     """
-    pass
+    def return_appearance(self, looker):
+        if self.db.desc:
+            desc = self.db.desc
+        else:
+            desc = u"|yThrough the {} {}:|n\n|c{}|n\n{}".format(
+                self.db.typename or 'exit',
+                self.key,
+                self.destination.get_display_name(looker),
+                self.destination.db.desc or '\n'
+            )
+        return desc
+
+class Door(Exit):
+    """
+    Represents a closable door. Closes self after x seconds.
+    """
+
+    def at_object_creation(self):
+        self.db.open = False
+        self.db.typename = "door"
+
+    def return_appearance(self, looker):
+        if self.db.open:
+            return super(Door, self).return_appearance(looker)
+        else:
+            return "|y{}|n\nA closed {}.".format(
+                self.get_display_name(looker),
+                self.db.typename or "door"
+            )
