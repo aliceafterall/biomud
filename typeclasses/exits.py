@@ -37,9 +37,10 @@ class Exit(DefaultExit):
         if self.db.desc:
             desc = self.db.desc
         else:
-            desc = u"|yThrough the {}:|n\n|c{}|n\n{}".format(
+            desc = u"|yThrough the {} {}:|n\n|c{}|n\n{}".format(
                 self.db.typename or 'exit',
-                self.destination.key,
+                self.key,
+                self.destination.get_display_name(looker),
                 self.destination.db.desc or '\n'
             )
         return desc
@@ -58,6 +59,6 @@ class Door(Exit):
             return super(Door, self).return_appearance(looker)
         else:
             return "|y{}|n\nA closed {}.".format(
-                self.key,
+                self.get_display_name(looker),
                 self.db.typename or "door"
             )
