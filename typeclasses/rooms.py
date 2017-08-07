@@ -20,7 +20,7 @@ class Room(DefaultRoom):
     """
     def at_say(self, speaker, message):
         if self.db.signalhandler and speaker.is_typeclass('typeclasses.characters.Character'):
-            self.db.signalhandler.throw('noise', source=speaker)
+            self.db.signalhandler.throw('noise', source=speaker, sound=message)
         return message
 
     def return_appearance(self, looker):
