@@ -32,6 +32,16 @@ class SignalHandler(DefaultScript):
                 # might wanna throw error
                 pass
 
+    def is_subscribed(self, subscriber, signal):
+        if isinstance(signal, Signal):
+            signal = signal.key
+        if signal in self.db.subscribers:
+            for stored_sub, callback in self.db.subscribers[signal]:
+                if subscriber == stored_sub:
+                    return True
+        # if we get here we either didn't find the subscriber or the signal    
+        return False
+
     def unsubscribe(self, subscriber, *signals, **kwargs):
         keys_to_remove = []
         for signal in signals:
