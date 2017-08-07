@@ -1,5 +1,6 @@
 from characters import Character
 from evennia import search_script
+import datetime
 
 class NPC(Character):
     def at_object_creation(self, *args, **kwargs):
@@ -11,9 +12,11 @@ class NPC(Character):
         if self.db.signalhandler:
             self.db.signalhandler.subscribe(self, self.at_heard_noise, 'noise')
 
-    def at_heard_noise(self, *args, **kwargs):
-        if 'source' in kwargs:
-            source = kwargs['source']
+    def at_heard_noise(self, source=None, *args, **kwargs):
+        if source == self:
+            return
+        if source.is_typeclass('typeclasses.characters.Character') \
+                                        and source in self.location.contents:
             to_say = "{}, pipe down!".format(source.key)
         else:
             to_say = "Woah! What was that?"

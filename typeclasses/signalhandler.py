@@ -4,6 +4,7 @@ Allows objects to subscribe to and throw signals
 """
 from evennia import DefaultScript
 from twisted.internet.defer import inlineCallbacks
+from evennia.utils import delay
 
 
 class Signal(object):
@@ -39,7 +40,7 @@ class SignalHandler(DefaultScript):
             for stored_sub, callback in self.db.subscribers[signal]:
                 if subscriber == stored_sub:
                     return True
-        # if we get here we either didn't find the subscriber or the signal    
+        # if we get here we either didn't find the subscriber or the signal
         return False
 
     def unsubscribe(self, subscriber, *signals, **kwargs):
@@ -71,7 +72,7 @@ class SignalHandler(DefaultScript):
         if key in self.db.subscribers:
             caught_signal = []
             for subscriber, callback in self.db.subscribers[key]:
-                status = getattr(subscriber, callback)(*args, **kwargs)
+                delay(.5, getattr(subscriber, callback), *args, **kwargs)
                 caught_signal.append(subscriber)
             return caught_signal
         else:

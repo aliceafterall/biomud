@@ -6,7 +6,7 @@ Rooms are simple containers that has no location of their own.
 """
 
 from evennia import DefaultRoom
-
+from evennia.utils import delay
 
 class Room(DefaultRoom):
     """
@@ -18,6 +18,11 @@ class Room(DefaultRoom):
     See examples/object.py for a list of
     properties and methods available on all Objects.
     """
+    def at_say(self, speaker, message):
+        if self.db.signalhandler and speaker.is_typeclass('typeclasses.characters.Character'):
+            self.db.signalhandler.throw('noise', source=speaker)
+        return message
+
     def return_appearance(self, looker):
         """
         This formats a description. It is the hook a 'look' command
