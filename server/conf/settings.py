@@ -34,6 +34,15 @@ from evennia.settings_default import *
 # This is the name of your game. Make it catchy!
 SERVERNAME = "Biomud"
 
+DATABASES["myapp"] = {
+        'NAME': os.path.join(GAME_DIR, 'server', 'myapp_data.db3'),
+        'ENGINE': 'django.db.backends.sqlite3'
+}
+
+DATABASE_ROUTERS = ['myapp.routers.CustomRouter']
+DATABASE_APPS_MAPPING = {'myapp': 'myapp'}
+
+INSTALLED_APPS += ('myapp',)
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
